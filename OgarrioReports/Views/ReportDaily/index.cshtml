@@ -1,0 +1,203 @@
+﻿@model IEnumerable<OgarrioReports.Models.ReportDailyDB>
+
+@{
+    ViewBag.Title = "Daily Reports";
+    Layout = null;
+}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --font-family: "Roboto", sans-serif;
+        --font-size: 10px;
+        --color-header-bg: #1F56AD;
+        --color-header-text: #ffffff;
+        --color-row-odd: #C2D5F4;
+        --color-row-even: #E9F0FB;
+        --color-row-hover: #74A0E7;
+        --color-row-selected: #99ccff;
+    }
+
+    body {
+        font-family: var(--font-family);
+        font-size: var(--font-size);
+    }
+
+    table.dataTable {
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+    }
+
+        table.dataTable thead th {
+            background-color: var(--color-header-bg);
+            color: var(--color-header-text);
+            text-align: center;
+            padding: 8px;
+            white-space: nowrap; /* evita que se corte el texto */
+        }
+
+        table.dataTable tbody td {
+            padding: 6px;
+            white-space: nowrap; /* mantiene todo en una línea */
+        }
+
+        table.dataTable tbody tr:nth-child(odd) {
+            background-color: var(--color-row-odd);
+        }
+
+        table.dataTable tbody tr:nth-child(even) {
+            background-color: var(--color-row-even);
+        }
+
+        table.dataTable tbody tr:hover {
+            background-color: var(--color-row-hover);
+        }
+
+        table.dataTable tbody tr.selected {
+            background-color: var(--color-row-selected) !important;
+            color: #000 !important; /* para texto oscuro legible */
+        }
+
+    /* encabezado con líneas visibles */
+    #dailyReports.dataTable thead th {
+        border-right: 1px solid #999 !important; /* gris más oscuro */
+    }
+
+    /* filas con líneas */
+    #dailyReports.dataTable tbody td {
+        border-right: 1px solid #ccc; /* un poco más suave que el header */
+    }
+
+        /* quitar la línea en la última columna */
+        #dailyReports.dataTable thead th:last-child,
+        #dailyReports.dataTable tbody td:last-child {
+            border-right: none !important;
+        }
+
+    /* separa la barra de búsqueda */
+    .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 15px; /* espacio debajo de la barra de búsqueda */
+    }
+</style>
+
+<h2 style="margin-bottom:15px;">Daily Reports</h2>
+
+<table id="dailyReports" class="display nowrap">
+    <thead>
+        <tr>
+            <th>Folio</th>
+            <th>Inicio</th>
+            <th>Corte</th>
+            <th>Impresión</th>
+            <th>Vol. Apertura</th>
+            <th>Vol. Cierre</th>
+            <th>Vol. Indicado</th>
+            <th>Vol. Grueso</th>
+            <th>Masa Total</th>
+            <th>GSV 60°F</th>
+            <th>NSV 60°F</th>
+            <th>GSV 68°F</th>
+            <th>NSV 68°F</th>
+            <th>Pulsos Totales</th>
+            <th>Presión</th>
+            <th>Temperatura</th>
+            <th>Densidad</th>
+            <th>Grados API</th>
+            <th>Corte de Agua</th>
+            <th>CTL</th>
+            <th>CPL</th>
+            <th>Meter Factor</th>
+            <th>K Factor</th>
+            <th>Tiempo de Bombeo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.D202_ID</td>
+                <td>
+                    @(
+                        DateTime.TryParse(item.D202_START_DATE, out DateTime dtInicio)
+                            ? dtInicio.ToString("dd/MM/yyyy HH:mm")
+                            : item.D202_START_DATE
+                    )
+                </td>
+                <td>
+                    @(
+                        DateTime.TryParse(item.D202_END_DATE, out DateTime dtFin)
+                            ? dtFin.ToString("dd/MM/yyyy HH:mm")
+                            : item.D202_END_DATE
+                    )
+                </td>
+                <td>
+                    @(
+                        DateTime.TryParse(item.D202_PRINT_DATE, out DateTime dtImp)
+                            ? dtImp.ToString("dd/MM/yyyy HH:mm")
+                            : item.D202_PRINT_DATE
+                    )
+                </td>
+                <td>@item.D202_VOL_OP.ToString("N2")</td>
+                <td>@item.D202_VOL_CL.ToString("N2")</td>
+                <td>@item.D202_IVOL.ToString("N2")</td>
+                <td>@item.D202_GUVOL.ToString("N2")</td>
+                <td>@item.D202_MASS.ToString("N2")</td>
+                <td>@item.D202_GSVOL_60.ToString("N2")</td>
+                <td>@item.D202_NSVOL_60.ToString("N2")</td>
+                <td>@item.D202_GSVOL_68.ToString("N2")</td>
+                <td>@item.D202_NSVOL_68.ToString("N2")</td>
+                <td>@item.D202_PULSES</td>
+                <td>@item.D202_PRESS.ToString("N2")</td>
+                <td>@item.D202_TEMP.ToString("N2")</td>
+                <td>@item.D202_DENS_OBS.ToString("N2")</td>
+                <td>@item.D202_DENS_60.ToString("N2")</td>
+                <td>@item.D202_WCT.ToString("N2")</td>
+                <td>@item.D202_CTL_60.ToString("N4")</td>
+                <td>@item.D202_CPL_60.ToString("N4")</td>
+                <td>@item.D202_MF.ToString("N4")</td>
+                <td>@item.D202_KF.ToString("N4")</td>
+                <td>@item.D202_TIME_F.ToString("N2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- jQuery + DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var table = $('#dailyReports').DataTable({
+            scrollX: true,
+            scrollY: "500px", // ajusta la altura visible
+            scrollCollapse: true,
+            paging: true,
+            pageLength: 10,
+            ordering: false,
+            order: [[0, "desc"]],
+            fixedHeader: true,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+            }
+        });
+
+        // Fila seleccionada
+        $('#dailyReports tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+    });
+</script>
